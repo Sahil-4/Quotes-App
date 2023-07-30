@@ -1,0 +1,27 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.QuotesApp" parent="Theme.AppCompat.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/background_main</item>
+        <item name="colorPrimaryVariant">@color/header</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/card_background</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/header</item>
+        <item name="popupMenuStyle">@style/popupmenu</item>
+    </style>
+
+    <style name="popupmenu" parent="@android:style/Widget.PopupMenu">
+        <item name="popupMenuBackground">@color/header</item>
+        <item name="android:background">@color/header</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+</resources>
