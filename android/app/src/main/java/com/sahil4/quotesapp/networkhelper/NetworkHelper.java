@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sahil4.quotesapp.models.MyPreference;
 import com.sahil4.quotesapp.models.Quote;
-import com.sahil4.quotesapp.repositories.PreferenceRepository;
 import com.sahil4.quotesapp.roomdb.QuoteDAO;
 import com.sahil4.quotesapp.roomdb.QuoteDatabase;
+import com.sahil4.quotesapp.viewmodels.PreferencesViewModel;
 
 import org.chromium.net.CronetEngine;
 import org.chromium.net.CronetException;
@@ -27,7 +27,7 @@ public class NetworkHelper {
     private static UrlRequest request;
     public final QuoteDAO quoteDAO;
     String _id, content, author;
-    PreferenceRepository preferenceRepository;
+    PreferencesViewModel preferencesViewModel;
     final List<MyPreference> allPreferences;
 
     public NetworkHelper(Application application) {
@@ -41,8 +41,8 @@ public class NetworkHelper {
         quoteDAO = QuoteDatabase.getInstance(application.getApplicationContext()).quoteDAO();
 
         // get preferences to get quote
-        preferenceRepository = new PreferenceRepository(application.getApplicationContext());
-        allPreferences = preferenceRepository.getPreferences();
+        preferencesViewModel = new PreferencesViewModel(application);
+        allPreferences = preferencesViewModel.getPreferences();
     }
 
     public void makeRequest(String url) {

@@ -51,7 +51,7 @@ public class PreferenceRepository {
         return allPreferences;
     }
 
-    public void updatePreferences(MyPreference preference) {
+    public void updatePreference(MyPreference preference) {
         // update preferences
         for (MyPreference pref : allPreferences) {
             if (Objects.equals(pref.getTitle(), preference.getTitle())) {
