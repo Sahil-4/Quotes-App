@@ -16,7 +16,7 @@ public class QuoteRepository {
     final NetworkHelper networkHelper;
 
     public QuoteRepository(Application application) {
-        QuoteDatabase quoteDatabase = QuoteDatabase.getInstance(application);
+        QuoteDatabase quoteDatabase = QuoteDatabase.getInstance(application.getApplicationContext());
         networkHelper = new NetworkHelper(application);
         quoteDAO = quoteDatabase.quoteDAO();
     }

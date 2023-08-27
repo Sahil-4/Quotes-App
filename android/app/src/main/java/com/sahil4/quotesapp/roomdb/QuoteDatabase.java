@@ -24,7 +24,7 @@ public abstract class QuoteDatabase extends RoomDatabase {
     public static QuoteDatabase getInstance(final Context context) {
         if (INSTANCE == null) {
             synchronized (QuoteDatabase.class) {
-                INSTANCE = Room.databaseBuilder(context.getApplicationContext(), QuoteDatabase.class, "quotes_database").addCallback(sRoomDatabaseCallback).build();
+                INSTANCE = Room.databaseBuilder(context, QuoteDatabase.class, "quotes_database").addCallback(sRoomDatabaseCallback).build();
             }
         }
 

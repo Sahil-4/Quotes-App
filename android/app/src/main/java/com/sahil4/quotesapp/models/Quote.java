@@ -8,7 +8,7 @@ import java.util.Calendar;
 @Entity(tableName = "qoutes")
 public class Quote {
     @PrimaryKey(autoGenerate = true)
-    private final long _id;
+    private long _id;
     private final String Author;
     private final String Content;
 
@@ -28,5 +28,9 @@ public class Quote {
 
     public long get_id() {
         return this._id;
+    }
+
+    public void set_id(long _id) {
+        this._id = _id;
     }
 }
