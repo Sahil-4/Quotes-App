@@ -9,12 +9,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.sahil4.quotesapp.models.Quote;
 import com.sahil4.quotesapp.networkhelper.NetworkHelper;
 import com.sahil4.quotesapp.viewmodels.QuotesViewModel;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     TextView quoteContentTextView, quoteAuthorTextView;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     QuotesViewModel quotesViewModel = null;
 
     final int MAX_QUOTES_LENGTH = 15;
+    public final int UPDATE_QUOTE = 3001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // making options menu actionable
         if (item.getItemId() == R.id.show_history) {
-            startActivity(new Intent(this, History.class));
+            secondActivityLauncher.launch(new Intent(this, History.class));
         } else if (item.getItemId() == R.id.show_settings) {
             startActivity(new Intent(this, Settings.class));
         } else if (item.getItemId() == R.id.show_about) {
@@ -110,6 +115,17 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    private final ActivityResultLauncher<Intent> secondActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == UPDATE_QUOTE) {
+            // change quote in text view
+            assert result.getData() != null;
+            int position = result.getData().getIntExtra("position", 0);
+            Quote quote = Objects.requireNonNull(quotesViewModel.getAllQuotes().getValue()).get(position);
+            quoteContentTextView.setText(quote.getContent());
+            quoteAuthorTextView.setText(quote.getAuthor());
+        }
+    });
 
     @Override
     public void onDestroy() {
