@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     final int MAX_QUOTES_LENGTH = 15;
     public final int UPDATE_QUOTE = 3001;
+    public final int PREFERENCES_UPDATED = 3002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.show_history) {
             secondActivityLauncher.launch(new Intent(this, History.class));
         } else if (item.getItemId() == R.id.show_settings) {
-            startActivity(new Intent(this, Settings.class));
+            secondActivityLauncher.launch(new Intent(this, Settings.class));
         } else if (item.getItemId() == R.id.show_about) {
             startActivity(new Intent(this, About.class));
         } else {
@@ -124,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
             Quote quote = Objects.requireNonNull(quotesViewModel.getAllQuotes().getValue()).get(position);
             quoteContentTextView.setText(quote.getContent());
             quoteAuthorTextView.setText(quote.getAuthor());
+        } else if (result.getResultCode() == PREFERENCES_UPDATED) {
+            // for getting quotes according to preferences
+            quotesViewModel = new QuotesViewModel(getApplication());
         }
     });
 

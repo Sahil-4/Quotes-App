@@ -27,7 +27,7 @@
         android:layout_height="48dp"
         android:background="@color/transparent"
         android:contentDescription="@string/delete"
-        android:src="@drawable/baseline_save"
+        android:src="@drawable/baseline_delete_52"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

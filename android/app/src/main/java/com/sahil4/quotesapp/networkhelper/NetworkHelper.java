@@ -121,7 +121,7 @@ public class NetworkHelper {
 
         String URL = base_url + path_random;
         if (pref_count != 0) {
-            path_preference.deleteCharAt(path_preference.length());
+            path_preference.deleteCharAt(path_preference.length() - 1);
             URL = base_url + path_random + path_preference;
         }
 
