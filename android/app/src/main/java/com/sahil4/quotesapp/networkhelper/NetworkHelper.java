@@ -8,6 +8,7 @@ import com.sahil4.quotesapp.models.MyPreference;
 import com.sahil4.quotesapp.models.Quote;
 import com.sahil4.quotesapp.roomdb.QuoteDAO;
 import com.sahil4.quotesapp.roomdb.QuoteDatabase;
+import com.sahil4.quotesapp.utility.OnQuoteReceiveListener;
 import com.sahil4.quotesapp.viewmodels.PreferencesViewModel;
 
 import org.chromium.net.CronetEngine;
@@ -29,6 +30,7 @@ public class NetworkHelper {
     String _id, content, author;
     PreferencesViewModel preferencesViewModel;
     final List<MyPreference> allPreferences;
+    private OnQuoteReceiveListener onQuoteReceiveListener = null;
 
     public NetworkHelper(Application application) {
         // Initialize Cronet
@@ -78,6 +80,9 @@ public class NetworkHelper {
                     // save in room db
                     Quote quote = new Quote(author, content);
                     QuoteDatabase.databaseWriteExecutor.execute(() -> quoteDAO.insertQuote(quote));
+
+                    // for notification
+                    onQuoteReceiveListener.updateQuote(quote);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -126,6 +131,10 @@ public class NetworkHelper {
         }
 
         makeRequest(URL);
+    }
+
+    public void setOnQuoteReceiveListener(OnQuoteReceiveListener listener) {
+        this.onQuoteReceiveListener = listener;
     }
 
     public static void shutdownCronetEngine() {

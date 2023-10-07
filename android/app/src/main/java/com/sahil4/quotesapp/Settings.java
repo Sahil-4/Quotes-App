@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +24,7 @@ import com.sahil4.quotesapp.viewmodels.NotificationTimeItemViewModel;
 import com.sahil4.quotesapp.viewmodels.PreferencesViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Settings extends AppCompatActivity {
@@ -104,6 +109,7 @@ public class Settings extends AppCompatActivity {
 
         // delete the time from list
         notificationTimeAdapter.setOnNotificationTimeClickListener(myNotificationTime -> {
+            cancelNotification(myNotificationTime);
             notificationTimeAdapter.notifyItemRemoved(allNotificationTimes.indexOf(myNotificationTime));
             notificationTimeItemViewModel.deleteNotificationTime(myNotificationTime);
             toggleSwitch();
@@ -156,6 +162,39 @@ public class Settings extends AppCompatActivity {
     }
 
     void setNotification(NotificationTime notificationTime) {
-        // TODO - set notification
+        // Set Alarm and Notification
+        // Adding time in calendar for alarm
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.set(Calendar.HOUR_OF_DAY, notificationTime.getPM() ? notificationTime.getHour() + 12 : notificationTime.getHour());
+        c.set(Calendar.MINUTE, notificationTime.getMinutes());
+        c.set(Calendar.SECOND, 0);
+
+        // Creating intent
+        Intent intent = new Intent(this, MyReceiver.class);
+        intent.putExtra("ID", (int) notificationTime.get_id());
+
+        // create pending intent using above intent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) notificationTime.get_id(), intent, PendingIntent.FLAG_IMMUTABLE);
+
+        // creating instance of alarm manager
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // setting alarm
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+    void cancelNotification(NotificationTime notificationTime) {
+        // cancelling the notification
+        Intent intent = new Intent(this, MyReceiver.class);
+        intent.putExtra("ID", (int) notificationTime.get_id());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) notificationTime.get_id(), intent, PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel((int) notificationTime.get_id());
     }
 }
