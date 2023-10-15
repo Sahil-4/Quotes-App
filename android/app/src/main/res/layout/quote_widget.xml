@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.QuotesApp.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/card_background"
+    android:theme="@style/Theme.QuotesApp.AppWidgetContainer">
+
+    <TextView
+        android:id="@+id/quote_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:text="@string/quote_content"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/quote_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/quote_content"
+        android:background="@color/transparent"
+        android:gravity="end"
+        android:text="@string/quote_author"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp" />
+
+    <ImageButton
+        android:id="@+id/refresh_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:contentDescription="@string/new_quote"
+        android:src="@drawable/baseline_refresh" />
+
+    <ImageButton
+        android:id="@+id/share_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:contentDescription="@string/share"
+        android:src="@drawable/share" />
+
+</RelativeLayout>
