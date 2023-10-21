@@ -19,7 +19,6 @@ public class QuoteWidget extends AppWidgetProvider implements OnQuoteReceiveList
     Context context;
     NetworkHelper networkHelper;
     final int REFRESH_REQUEST_CODE = 3003;
-    final int SHARE_REQUEST_CODE = 3003;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -78,9 +77,8 @@ public class QuoteWidget extends AppWidgetProvider implements OnQuoteReceiveList
 
         Intent intent = new Intent(context, QuoteWidget.class);
         intent.setAction("REFRESH_QUOTE_ACTION");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REFRESH_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REFRESH_REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // alarmManager.setRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         alarmManager.setRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
     }
 
@@ -104,14 +102,14 @@ public class QuoteWidget extends AppWidgetProvider implements OnQuoteReceiveList
             // new quote button
             Intent refreshIntent = new Intent(context, QuoteWidget.class);
             refreshIntent.setAction("REFRESH_QUOTE_ACTION");
-            PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, REFRESH_REQUEST_CODE, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, (int) quote.get_id(), refreshIntent, PendingIntent.FLAG_MUTABLE);
             views.setOnClickPendingIntent(R.id.refresh_button, refreshPendingIntent);
 
             // share button
             Intent shareIntent = new Intent(context, QuoteWidget.class);
             shareIntent.setAction("SHARE_QUOTE_ACTION");
             shareIntent.putExtra("QUOTE_CONTENT", quote.getContent().concat("\n\nQuote by ").concat(quote.getAuthor()));
-            PendingIntent sharePendingIntent = PendingIntent.getBroadcast(context, SHARE_REQUEST_CODE, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent sharePendingIntent = PendingIntent.getBroadcast(context, (int) quote.get_id(), shareIntent, PendingIntent.FLAG_MUTABLE);
             views.setOnClickPendingIntent(R.id.share_button, sharePendingIntent);
         }
     }
