@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -32,28 +32,34 @@ public class MyReceiver extends BroadcastReceiver implements OnQuoteReceiveListe
         this.context = context;
         this.intent = intent;
 
+        Log.d("onReceive", "we are in onReceive");
         getNewQuote();
     }
 
     @Override
     public void updateQuote(Quote qt) {
-        showNotification(context, intent, "Quote update", qt.getContent(), qt.getAuthor());
+        Log.d("updateQuote", "about to update quote,");
+        showNotification(context, intent, "Quote update", qt.getContent(), qt.getAuthor(), (int) qt.get_id());
     }
 
     public void getNewQuote() {
         networkHelper = new NetworkHelper((Application) this.context.getApplicationContext());
         networkHelper.setOnQuoteReceiveListener(this);
         networkHelper.getNewQuote();
+        Log.d("getNewQuote", "called getNewQuote");
     }
 
-    public void showNotification(Context context, Intent intent, String title, String body, String author) {
+    public void showNotification(Context context, Intent intent, String title, String body, String author, int _id) {
+        Log.d("showNotification", "will show notification now.");
+
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "Unable to show notification", Toast.LENGTH_SHORT).show();
+            Log.d("showNotification", "No permission.");
             return;
         }
 
+        Log.d("showNotification", "Possible show notification.");
         // creating pending intent
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, _id, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
 
         // creating notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -76,7 +82,7 @@ public class MyReceiver extends BroadcastReceiver implements OnQuoteReceiveListe
         shareIntent.putExtra(Intent.EXTRA_TEXT, body.concat("\n\nQuote By ").concat(author));
 
         // share pending intent
-        PendingIntent sharePendingIntent = PendingIntent.getActivity(context, 1, Intent.createChooser(shareIntent, "Share quote"), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sharePendingIntent = PendingIntent.getActivity(context, _id + 100, Intent.createChooser(shareIntent, "Share quote"), PendingIntent.FLAG_IMMUTABLE);
 
         // share action
         NotificationCompat.Action shareAction = new NotificationCompat.Action(R.drawable.share, "Share", sharePendingIntent);
@@ -88,5 +94,7 @@ public class MyReceiver extends BroadcastReceiver implements OnQuoteReceiveListe
 
         // show notification
         notificationManagerCompat.notify(intent.getIntExtra("ID", 0), builder.build());
+
+        Log.d("showNotification", "notification done.");
     }
 }

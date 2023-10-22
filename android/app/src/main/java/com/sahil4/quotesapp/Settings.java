@@ -1,6 +1,10 @@
 package com.sahil4.quotesapp;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +14,8 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -158,6 +164,11 @@ public class Settings extends AppCompatActivity {
     }
 
     void toggleSwitch() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!requestNotificationPermission()) {
+                return;
+            }
+        }
         enableNotificationSwitchCompat.setChecked(allNotificationTimes.size() > 0);
     }
 
@@ -197,4 +208,28 @@ public class Settings extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel((int) notificationTime.get_id());
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public boolean requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // You can use the API that requires the permission.
+            return true;
+        } else {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+            requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS);
+            return false;
+        }
+    }
+
+    // Register the permissions callback, which handles the user's response to the
+    // system permissions dialog. Save the return value, an instance of
+    // ActivityResultLauncher, as an instance variable.
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+            Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+        }
+    });
 }
