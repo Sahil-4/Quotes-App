@@ -49,6 +49,6 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesViewHolder> {
 
     public void setAllQuotes(List<Quote> allQuotes) {
         this.allQuotes = allQuotes;
-        notifyItemRangeChanged(0, allQuotes.size() - 1);
+        notifyItemInserted(0);
     }
 }
