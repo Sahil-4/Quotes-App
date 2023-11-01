@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=4XS580ajZN8
 
 ### Download Link
 
-You can download the app from [Here](./quotes-app.apk) or [Here](https://drive.google.com/file/d/1cHNz43xmqVt1IP2ZX9fd3kIrwS4pEAZW/view?usp=sharing).
+You can download the app from [Here](https://apps-alpha.netlify.app/app.apk)
 
 ### Features of Application
 
